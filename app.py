@@ -24,7 +24,8 @@ page = st.sidebar.radio("Go to", [
     "🕊️ Flocking Boids",
     "🐜 Langton's Ant",
     "🎼 Fourier Epicycles",
-    "🌳 Fractal Trees"
+    "🌳 Fractal Trees",
+    "🌪️ Clifford Attractor"
 ])
 
 # --- Routing ---
@@ -75,6 +76,11 @@ if page == "🏠 Home":
             <div class="icon">🌳</div>
             <h3>Fractal Trees</h3>
             <p>Watch a simple recursive botanical rule organically bloom into a complex, swaying Japanese Bonsai tree structure.</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[9].click();">
+            <div class="icon">🌪️</div>
+            <h3>Clifford Attractor</h3>
+            <p>A mesmerzing 2D pure-math chaotic system that organically generates ethereal glowing structures mirroring digital silk or quantum smoke.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -231,3 +237,8 @@ elif page == "🌳 Fractal Trees":
     from visualizations import fractal_trees
     importlib.reload(fractal_trees)
     fractal_trees.render()
+
+elif page == "🌪️ Clifford Attractor":
+    from visualizations import clifford_attractor
+    importlib.reload(clifford_attractor)
+    clifford_attractor.render()
