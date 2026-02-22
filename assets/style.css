@@ -161,3 +161,68 @@ h3 {
     font-weight: 500 !important;
     opacity: 0.95 !important;
 }
+
+/* --- Custom Sidebar Toggle Button --- */
+
+/* Base button styling for both Expanded and Collapsed states */
+[data-testid="stSidebarCollapseButton"] button,
+button[data-testid="stExpandSidebarButton"] {
+    width: 170px !important;
+    height: 40px !important;
+    background-color: rgba(26, 26, 26, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 1000001 !important;
+    backdrop-filter: blur(8px) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Hover effects */
+[data-testid="stSidebarCollapseButton"] button:hover,
+button[data-testid="stExpandSidebarButton"]:hover {
+    background-color: rgba(45, 45, 45, 1) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Position anchoring for the close button container in open sidebar */
+[data-testid="stSidebarCollapseButton"] {
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    right: auto !important;
+    z-index: 1000000 !important;
+    margin: 0 !important;
+}
+
+/* Position anchoring for the expand button in collapsed state */
+button[data-testid="stExpandSidebarButton"] {
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    margin: 0 !important;
+}
+
+/* Hide original Streamlit chevron icons */
+[data-testid="stSidebarCollapseButton"] button span:first-child,
+button[data-testid="stExpandSidebarButton"] span:first-child {
+    display: none !important;
+}
+
+/* Injected textual content */
+[data-testid="stSidebarCollapseButton"] button::after,
+button[data-testid="stExpandSidebarButton"]::after {
+    content: "SIDEBAR" !important;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.2px !important;
+    color: #ffffff !important;
+}
