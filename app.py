@@ -19,7 +19,8 @@ page = st.sidebar.radio("Go to", [
     "🌀 Lorenz Attractor", 
     "🪐 Aizawa Attractor", 
     "🪀 Double Pendulum",
-    "🦠 Reaction-Diffusion"
+    "🦠 Reaction-Diffusion",
+    "🕊️ Flocking Boids"
 ])
 
 # --- Routing ---
@@ -50,6 +51,11 @@ if page == "🏠 Home":
             <div class="icon">🦠</div>
             <h3>Reaction-Diffusion</h3>
             <p>Simulates how virtual chemicals diffuse and react, naturally sprouting complex biological patterns like leopard spots and zebra stripes.</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[5].click();">
+            <div class="icon">🕊️</div>
+            <h3>Flocking Boids</h3>
+            <p>Simulates the mesmerzing, fluid-like murmuration of birds using three simple localized vector rules: Separation, Alignment, and Cohesion.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -169,3 +175,8 @@ elif page == "🪀 Double Pendulum":
     from visualizations import double_pendulum
     importlib.reload(double_pendulum)
     double_pendulum.render()
+
+elif page == "🕊️ Flocking Boids":
+    from visualizations import boids
+    importlib.reload(boids)
+    boids.render()
