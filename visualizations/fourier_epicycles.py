@@ -13,10 +13,19 @@ def render():
     
     st.sidebar.header("Fourier Parameters")
     
-    shape = st.sidebar.selectbox("Silhouette Shape", ["Heart", "Trefoil Knot", "Infinity (Lemniscate)"])
+    shapes_list = [
+        "Heart", 
+        "Trefoil Knot", 
+        "Infinity (Lemniscate)", 
+        "Butterfly Curve", 
+        "Spirograph (Hypotrochoid)", 
+        "Lissajous Knot", 
+        "Star Epicycloid"
+    ]
+    shape = st.sidebar.selectbox("Silhouette Shape", shapes_list)
     
     # Send shape as integer to JS
-    shape_map = {"Heart": 0, "Trefoil Knot": 1, "Infinity (Lemniscate)": 2}
+    shape_map = {k: v for v, k in enumerate(shapes_list)}
     shape_id = shape_map[shape]
     
     # The max number of harmonics is bounded by the number of points we sample
@@ -86,7 +95,7 @@ def render():
             createCanvas(800, 600);
             
             // 1. Sample the mathematical shape
-            const N = 300;
+            const N = 600; // Higher fidelity for complex shapes
             let rawPoints = [];
             for (let i = 0; i < N; i++) {{
               let t = map(i, 0, N, 0, TWO_PI);
@@ -107,6 +116,31 @@ def render():
                 let scale = 200;
                 bx = (scale * cos(t)) / (1 + pow(sin(t), 2));
                 by = (scale * sin(t) * cos(t)) / (1 + pow(sin(t), 2));
+              }} else if (shapeId === 3) {{
+                // Temple's Butterfly Curve (needs 12pi domain to fully lock structural fractal)
+                let bt = map(i, 0, N, 0, TWO_PI * 12);
+                bx = sin(bt) * (exp(cos(bt)) - 2 * cos(4*bt) - pow(sin(bt/12), 5));
+                by = -cos(bt) * (exp(cos(bt)) - 2 * cos(4*bt) - pow(sin(bt/12), 5));
+                bx *= 50; by *= 50;
+              }} else if (shapeId === 4) {{
+                // Spirograph / Hypotrochoid
+                let ht = map(i, 0, N, 0, TWO_PI * 3);
+                let R = 5, r = 3, d = 5;
+                bx = (R - r) * cos(ht) + d * cos(((R - r) / r) * ht);
+                by = (R - r) * sin(ht) - d * sin(((R - r) / r) * ht);
+                bx *= 25; by *= 25;
+              }} else if (shapeId === 5) {{
+                // Dense Lissajous Knot Phase
+                bx = sin(3 * t + PI / 2);
+                by = sin(2 * t);
+                bx *= 200; by *= 200;
+              }} else if (shapeId === 6) {{
+                // Epicycloid Star
+                let et = map(i, 0, N, 0, TWO_PI * 2);
+                let R = 5, r = 2; // k = 2.5
+                bx = (R + r) * cos(et) - r * cos(((R + r) / r) * et);
+                by = (R + r) * sin(et) - r * sin(((R + r) / r) * et);
+                bx *= 25; by *= 25;
               }}
               
               rawPoints.push({{ x: bx, y: by }});
