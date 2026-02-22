@@ -81,10 +81,10 @@ def render():
             
             beginShape();
             for (let v of points) {{
-              let mappedHue = map(v.z, 0, 50, 0, 255);
-              mappedHue = (mappedHue + frameCount * 0.5) % 255;
+              // HSB: Map depth to Brightness, keep Hue locked to Rich Light Blue (140)
+              let mappedBright = map(v.z, 0, 50, 255, 50);
               
-              stroke(mappedHue, 255, 255);
+              stroke(140, 255, mappedBright);
               strokeWeight(strokeThickness); 
               vertex(v.x, v.y, v.z);
             }}
