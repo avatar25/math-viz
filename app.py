@@ -23,7 +23,8 @@ page = st.sidebar.radio("Go to", [
     "🦠 Reaction-Diffusion",
     "🕊️ Flocking Boids",
     "🐜 Langton's Ant",
-    "🎼 Fourier Epicycles"
+    "🎼 Fourier Epicycles",
+    "🌳 Fractal Trees"
 ])
 
 # --- Routing ---
@@ -69,6 +70,11 @@ if page == "🏠 Home":
             <div class="icon">🎼</div>
             <h3>Fourier Epicycles</h3>
             <p>Decompose any complex shape into a mesmerizing sequence of elegantly spinning gears and recursive circles (sine waves).</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[8].click();">
+            <div class="icon">🌳</div>
+            <h3>Fractal Trees</h3>
+            <p>Watch a simple recursive botanical rule organically bloom into a complex, swaying Japanese Bonsai tree structure.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -220,3 +226,8 @@ elif page == "🎼 Fourier Epicycles":
     from visualizations import fourier_epicycles
     importlib.reload(fourier_epicycles)
     fourier_epicycles.render()
+
+elif page == "🌳 Fractal Trees":
+    from visualizations import fractal_trees
+    importlib.reload(fractal_trees)
+    fractal_trees.render()
