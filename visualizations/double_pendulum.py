@@ -5,8 +5,10 @@ def render():
     st.title("Double Pendulum Visualization")
     st.markdown("""
     The Double Pendulum is a classic example of a simple physical system that exhibits rich, chaotic, and unpredictable dynamics. 
-    Here we simulate **three** pendulums simultaneously. They start with an initial angle difference of just **0.001 radians** ($\approx 0.05^\circ$). 
+    Here we simulate **ten** pendulums simultaneously. They start with an initial angle difference of just **0.001 radians** ($\approx 0.05^\circ$). 
     Watch how quickly their paths diverge—a phenomenon known as sensitive dependence on initial conditions (the butterfly effect).
+    <br><br>
+    Use the **Start** and **Stop** buttons in the visualization to pause the chaos and inspect the traces.
     """)
     
     st.sidebar.header("Pendulum Parameters")
@@ -35,14 +37,45 @@ def render():
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
           }}
           canvas {{
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
           }}
+          .controls {{
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+          }}
+          button {{
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+          }}
+          button:hover {{
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+          }}
+          button:active {{
+            transform: scale(0.95);
+          }}
         </style>
       </head>
       <body>
+        <div class="controls">
+          <button onclick="startSim()">Start</button>
+          <button onclick="stopSim()">Stop</button>
+        </div>
         <script>
           const g = {g} / 10; // scale gravity for the visual frame rate
           const m1 = {m1};
@@ -97,6 +130,17 @@ def render():
           }}
 
           let pendulums = [];
+          
+          // Simulation toggle flag
+          let isPlaying = true;
+
+          function startSim() {{
+            isPlaying = true;
+          }}
+
+          function stopSim() {{
+            isPlaying = false;
+          }}
 
           function setup() {{
             createCanvas(800, 600);
@@ -108,22 +152,42 @@ def render():
             let startAngle2 = PI / 2;
             let diff = 0.001;
 
-            // Neon Cyan: #00FFFF, Electric Purple: #BF00FF, Lime Green: #32CD32
-            pendulums.push(new DoublePendulum(startAngle1, startAngle2, color(0, 255, 255))); 
-            pendulums.push(new DoublePendulum(startAngle1 + diff, startAngle2 + diff, color(191, 0, 255))); 
-            pendulums.push(new DoublePendulum(startAngle1 - diff, startAngle2 - diff, color(50, 205, 50))); 
+            // 10 Vibrant Neon Colors for the palette
+            let palette = [
+              color(0, 255, 255),    // Neon Cyan
+              color(0, 191, 255),    // Deep Sky Blue
+              color(50, 205, 50),    // Lime Green
+              color(173, 255, 47),   // Green-Yellow
+              color(255, 255, 0),    // Yellow
+              color(255, 140, 0),    // Dark Orange
+              color(255, 69, 0),     // Red-Orange
+              color(255, 20, 147),   // Deep Pink
+              color(191, 0, 255),    // Electric Purple
+              color(138, 43, 226)    // Blue Violet
+            ];
+
+            for (let i = 0; i < 10; i++) {{
+              pendulums.push(new DoublePendulum(
+                startAngle1 + (diff * i), 
+                startAngle2 + (diff * i), 
+                palette[i]
+              ));
+            }}
           }}
 
           function draw() {{
             background(15, 15, 15); // Clear every frame so we redraw lines to fade them smoothly
             
             // We want to fade the trails over 1000 frames using path histories.
+            // Only update physics if playing
             for (let p of pendulums) {{
-                p.update();
-                let pos = p.getPositions();
-                p.path.push(createVector(pos.x2, pos.y2));
-                if (p.path.length > 1000) {{
-                  p.path.shift();
+                if (isPlaying) {{
+                    p.update();
+                    let pos = p.getPositions();
+                    p.path.push(createVector(pos.x2, pos.y2));
+                    if (p.path.length > 1000) {{
+                      p.path.shift();
+                    }}
                 }}
             }}
 
