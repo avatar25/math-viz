@@ -1,0 +1,145 @@
+/* Fira Code Font Injection */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap');
+
+html,
+body,
+[class*="css"] {
+    font-family: 'Fira Code', monospace !important;
+}
+
+/* Deep Charcoal / Obsidian Background with Blueprint Grid */
+.stApp {
+    background-color: #0b0b0b !important;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) !important;
+    background-size: 30px 30px !important;
+    color: #e0e0e0 !important;
+}
+
+/* Glassmorphism Sidebar */
+[data-testid="stSidebar"] {
+    background-color: rgba(11, 11, 11, 0.4) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Custom Navigation: Hide default radio circles */
+div[role="radiogroup"]>label>div:first-child {
+    display: none !important;
+}
+
+/* Style Radio Labels as Icons/Cards */
+div[role="radiogroup"]>label {
+    background: transparent !important;
+    padding: 12px 16px !important;
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    border-left: 2px solid transparent !important;
+}
+
+div[role="radiogroup"]>label p {
+    color: #f0f0f0 !important;
+    font-size: 1.05rem !important;
+}
+
+/* Hover effect on nav items */
+div[role="radiogroup"]>label:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Active State: The "neon sliding line" effect */
+div[role="radiogroup"]>label[data-checked="true"] {
+    background: rgba(0, 255, 255, 0.05) !important;
+    border-left: 3px solid #00FFFF !important;
+    color: #00FFFF !important;
+    box-shadow: inset 20px 0 20px -20px rgba(0, 255, 255, 0.3);
+}
+
+div[role="radiogroup"]>label[data-checked="true"] p {
+    color: #00FFFF !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Home Page Cards Overlay */
+.cards-container {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    z-index: 10;
+    position: relative;
+}
+
+.viz-card {
+    background: rgba(20, 20, 22, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 24px;
+    width: 300px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.viz-card>h3 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.viz-card>p {
+    color: #aaa;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.viz-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15);
+}
+
+.viz-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+    color: #ffffff !important;
+}
+
+/* Sliders Overhaul */
+.stSlider div[data-baseweb="slider"] {
+    background: transparent !important;
+}
+
+.stSlider div[data-testid="stTickBar"] {
+    display: none !important;
+}
+
+/* Make top header blend with dark theme */
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* Force all sidebar labels and paragraphs to pop */
+[data-testid="stSidebar"] label p,
+[data-testid="stSidebar"] .stMarkdown p {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    opacity: 0.95 !important;
+}
