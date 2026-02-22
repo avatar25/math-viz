@@ -21,7 +21,8 @@ page = st.sidebar.radio("Go to", [
     "🪀 Double Pendulum",
     "🦠 Reaction-Diffusion",
     "🕊️ Flocking Boids",
-    "🐜 Langton's Ant"
+    "🐜 Langton's Ant",
+    "🎼 Fourier Epicycles"
 ])
 
 # --- Routing ---
@@ -62,6 +63,11 @@ if page == "🏠 Home":
             <div class="icon">🐜</div>
             <h3>Langton's Ant</h3>
             <p>A deterministic universal Turing machine that behaves chaotically before inexplicably building a permanent neon fiber-optic highway.</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[7].click();">
+            <div class="icon">🎼</div>
+            <h3>Fourier Epicycles</h3>
+            <p>Decompose any complex shape into a mesmerizing sequence of elegantly spinning gears and recursive circles (sine waves).</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -191,3 +197,8 @@ elif page == "🐜 Langton's Ant":
     from visualizations import langtons_ant
     importlib.reload(langtons_ant)
     langtons_ant.render()
+
+elif page == "🎼 Fourier Epicycles":
+    from visualizations import fourier_epicycles
+    importlib.reload(fourier_epicycles)
+    fourier_epicycles.render()
