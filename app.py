@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import importlib
 
 # Set page config once
@@ -71,7 +72,24 @@ if page == "🏠 Home":
         </div>
     </div>
     """, unsafe_allow_html=True)
-
+    
+    # Inject JavaScript event listeners for the Home page cards.
+    # Streamlit strips inline `onclick` attributes in HTML, so we bind them dynamically over the parent DOM.
+    components.html("""
+    <script>
+      const parent = window.parent.document;
+      const cards = parent.querySelectorAll('.viz-card');
+      const labels = parent.querySelectorAll('div[role="radiogroup"] label');
+      
+      cards.forEach((card, index) => {
+          card.onclick = () => {
+              if(labels[index + 1]) {
+                  labels[index + 1].click();
+              }
+          };
+      });
+    </script>
+    """, height=0, width=0)
     # Living Background: Sumi-e ink-wash double pendulum painted directly into the DOM
     st.markdown("""
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
