@@ -13,12 +13,13 @@ with open("assets/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # --- Sidebar Navigation ---
-st.sidebar.title("⚛️")
+st.sidebar.title("")
 page = st.sidebar.radio("Go to", [
     "🏠 Home", 
     "🌀 Lorenz Attractor", 
     "🪐 Aizawa Attractor", 
-    "🪀 Double Pendulum"
+    "🪀 Double Pendulum",
+    "🦠 Reaction-Diffusion"
 ])
 
 # --- Routing ---
@@ -44,6 +45,11 @@ if page == "🏠 Home":
             <div class="icon">🪀</div>
             <h3>Double Pendulum</h3>
             <p>Ten simultaneous non-linear pendulums demonstrating sensitive dependence on initial conditions through exploding neon traces.</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[4].click();">
+            <div class="icon">🦠</div>
+            <h3>Reaction-Diffusion</h3>
+            <p>Simulates how virtual chemicals diffuse and react, naturally sprouting complex biological patterns like leopard spots and zebra stripes.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -154,11 +160,10 @@ elif page == "🪐 Aizawa Attractor":
     importlib.reload(aizawa)
     aizawa.render()
 
-# slow af. disabled for now.
-#elif page == "Reaction-Diffusion (Turing)":
-#   from visualizations import reaction_diffusion
-#    importlib.reload(reaction_diffusion)
-#    reaction_diffusion.render()
+elif page == "🦠 Reaction-Diffusion":
+    from visualizations import reaction_diffusion
+    importlib.reload(reaction_diffusion)
+    reaction_diffusion.render()
 
 elif page == "🪀 Double Pendulum":
     from visualizations import double_pendulum
