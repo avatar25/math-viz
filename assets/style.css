@@ -1,9 +1,27 @@
 /* Fira Code Font Injection */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
 
+*,
 html,
 body,
-[class*="css"] {
+[class*="css"],
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+label,
+input,
+button,
+a,
+li,
+td,
+th,
+[data-testid] {
     font-family: 'Fira Code', monospace !important;
 }
 
