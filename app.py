@@ -20,7 +20,8 @@ page = st.sidebar.radio("Go to", [
     "🪐 Aizawa Attractor", 
     "🪀 Double Pendulum",
     "🦠 Reaction-Diffusion",
-    "🕊️ Flocking Boids"
+    "🕊️ Flocking Boids",
+    "🐜 Langton's Ant"
 ])
 
 # --- Routing ---
@@ -56,6 +57,11 @@ if page == "🏠 Home":
             <div class="icon">🕊️</div>
             <h3>Flocking Boids</h3>
             <p>Simulates the mesmerzing, fluid-like murmuration of birds using three simple localized vector rules: Separation, Alignment, and Cohesion.</p>
+        </div>
+        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[6].click();">
+            <div class="icon">🐜</div>
+            <h3>Langton's Ant</h3>
+            <p>A deterministic universal Turing machine that behaves chaotically before inexplicably building a permanent neon fiber-optic highway.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -180,3 +186,8 @@ elif page == "🕊️ Flocking Boids":
     from visualizations import boids
     importlib.reload(boids)
     boids.render()
+
+elif page == "🐜 Langton's Ant":
+    from visualizations import langtons_ant
+    importlib.reload(langtons_ant)
+    langtons_ant.render()
