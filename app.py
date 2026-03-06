@@ -1,244 +1,108 @@
-import streamlit as st
-import streamlit.components.v1 as components
+from __future__ import annotations
+
 import importlib
 
-# Set page config once
+import streamlit as st
+
+from visualizations.catalog import HOME_PAGE_KEY, PAGE_BY_KEY, PAGE_ORDER, VISUALIZATION_PAGES
+from visualizations.shared import load_project_text
+
+
 st.set_page_config(
     page_title="Math Visualizations",
     page_icon="⚛️",
     layout="wide",
 )
 
-# Load CSS
-with open("assets/style.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# --- Sidebar Navigation ---
-st.sidebar.title("")
-page = st.sidebar.radio("Go to", [
-    "🏠 Home", 
-    "🌀 Lorenz Attractor", 
-    "🪐 Aizawa Attractor", 
-    "🪀 Double Pendulum",
-    "🦠 Reaction-Diffusion",
-    "🕊️ Flocking Boids",
-    "🐜 Langton's Ant",
-    "🎼 Fourier Epicycles",
-    "🌳 Fractal Trees",
-    "🌪️ Clifford Attractor"
-])
+def apply_styles() -> None:
+    styles = load_project_text("assets", "style.css")
+    st.markdown(f"<style>{styles}</style>", unsafe_allow_html=True)
 
-# --- Routing ---
-if page == "🏠 Home":
-    st.title("Math Vizualizations")
-    st.markdown("""
-    Explore interactive mathematical and physics-based chaotic visualizations.
-    """)
-    
-    st.markdown("""
-    <div class="cards-container">
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[1].click();">
-            <div class="icon">🌀</div>
-            <h3>Lorenz Attractor</h3>
-            <p>An intricate 3D representation of atmospheric convection equations that birthed Chaos Theory and the Butterfly Effect.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[2].click();">
-            <div class="icon">🪐</div>
-            <h3>Aizawa Attractor</h3>
-            <p>A mesmerizing spherical-like chaotic structure with a central tubal void, commonly associated with complex fluid dynamics.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[3].click();">
-            <div class="icon">🪀</div>
-            <h3>Double Pendulum</h3>
-            <p>Ten simultaneous non-linear pendulums demonstrating sensitive dependence on initial conditions through exploding neon traces.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[4].click();">
-            <div class="icon">🦠</div>
-            <h3>Reaction-Diffusion</h3>
-            <p>Simulates how virtual chemicals diffuse and react, naturally sprouting complex biological patterns like leopard spots and zebra stripes.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[5].click();">
-            <div class="icon">🕊️</div>
-            <h3>Flocking Boids</h3>
-            <p>Simulates the mesmerzing, fluid-like murmuration of birds using three simple localized vector rules: Separation, Alignment, and Cohesion.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[6].click();">
-            <div class="icon">🐜</div>
-            <h3>Langton's Ant</h3>
-            <p>A deterministic universal Turing machine that behaves chaotically before inexplicably building a permanent neon fiber-optic highway.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[7].click();">
-            <div class="icon">🎼</div>
-            <h3>Fourier Epicycles</h3>
-            <p>Decompose any complex shape into a mesmerizing sequence of elegantly spinning gears and recursive circles (sine waves).</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[8].click();">
-            <div class="icon">🌳</div>
-            <h3>Fractal Trees</h3>
-            <p>Watch a simple recursive botanical rule organically bloom into a complex, swaying Japanese Bonsai tree structure.</p>
-        </div>
-        <div class="viz-card" onclick="window.parent.document.querySelectorAll('div[role=\\'radiogroup\\'] label')[9].click();">
-            <div class="icon">🌪️</div>
-            <h3>Clifford Attractor</h3>
-            <p>A mesmerzing 2D pure-math chaotic system that organically generates ethereal glowing structures mirroring digital silk or quantum smoke.</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Inject JavaScript event listeners for the Home page cards.
-    # Streamlit strips inline `onclick` attributes in HTML, so we bind them dynamically over the parent DOM.
-    components.html("""
-    <script>
-      const parent = window.parent.document;
-      const cards = parent.querySelectorAll('.viz-card');
-      const labels = parent.querySelectorAll('div[role="radiogroup"] label');
-      
-      cards.forEach((card, index) => {
-          card.onclick = () => {
-              if(labels[index + 1]) {
-                  labels[index + 1].click();
-              }
-          };
-      });
-    </script>
-    """, height=0, width=0)
-    # Living Background: Sumi-e ink-wash double pendulum painted directly into the DOM
-    st.markdown("""
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-    <script>
-    (function() {
-      // Prevent duplicate injection on Streamlit reruns
-      if (document.getElementById('sumie-canvas')) return;
 
-      const sketch = (p) => {
-        let pendulums = [];
-        let cx, cy;
+def normalize_query_page(value: object) -> str:
+    if isinstance(value, list):
+        value = value[0] if value else None
+    if isinstance(value, str) and value in PAGE_BY_KEY:
+        return value
+    return HOME_PAGE_KEY
 
-        class Pendulum {
-          constructor(a) {
-            this.a1 = a; this.a2 = a;
-            this.a1_v = 0; this.a2_v = 0;
-            this.path = [];
-            this.r1 = 0; this.r2 = 0;
-            this.m1 = 10; this.m2 = 10;
-            this.g = 1;
-          }
-          update(h) {
-            this.r1 = h * 0.22; this.r2 = h * 0.22;
-            let num1 = -this.g * (2*this.m1+this.m2) * Math.sin(this.a1);
-            let num2 = -this.m2 * this.g * Math.sin(this.a1 - 2*this.a2);
-            let num3 = -2 * Math.sin(this.a1 - this.a2) * this.m2;
-            let num4 = this.a2_v*this.a2_v*this.r2 + this.a1_v*this.a1_v*this.r1*Math.cos(this.a1-this.a2);
-            let den = this.r1*(2*this.m1+this.m2-this.m2*Math.cos(2*this.a1-2*this.a2));
-            let a1_a = (num1+num2+num3*num4)/den;
 
-            num1 = 2*Math.sin(this.a1-this.a2);
-            num2 = this.a1_v*this.a1_v*this.r1*(this.m1+this.m2);
-            num3 = this.g*(this.m1+this.m2)*Math.cos(this.a1);
-            num4 = this.a2_v*this.a2_v*this.r2*this.m2*Math.cos(this.a1-this.a2);
-            den = this.r2*(2*this.m1+this.m2-this.m2*Math.cos(2*this.a1-2*this.a2));
-            let a2_a = (num1*(num2+num3+num4))/den;
+def set_current_page(page_key: str) -> None:
+    st.session_state["current_page"] = page_key
+    st.query_params["page"] = page_key
 
-            this.a1_v += a1_a; this.a2_v += a2_a;
-            this.a1 += this.a1_v; this.a2 += this.a2_v;
 
-            let x2 = this.r1*Math.sin(this.a1) + this.r2*Math.sin(this.a2);
-            let y2 = this.r1*Math.cos(this.a1) + this.r2*Math.cos(this.a2);
-            this.path.push(p.createVector(x2, y2));
-            if (this.path.length > 150) this.path.shift();
-          }
-          show() {
-            p.noFill();
-            p.beginShape();
-            for (let i = 0; i < this.path.length; i++) {
-              p.strokeWeight(p.map(i, 0, this.path.length, 0.5, 6));
-              p.stroke(200, 200, 210, p.map(i, 0, this.path.length, 0, 60));
-              p.vertex(this.path[i].x, this.path[i].y);
-            }
-            p.endShape();
-          }
-        }
+def get_current_page() -> str:
+    query_page = normalize_query_page(st.query_params.get("page"))
+    current_page = st.session_state.get("current_page", query_page)
 
-        p.setup = function() {
-          let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
-          cnv.id('sumie-canvas');
-          cnv.style('position', 'fixed');
-          cnv.style('top', '0');
-          cnv.style('left', '0');
-          cnv.style('z-index', '-1');
-          cnv.style('pointer-events', 'none');
-          cnv.style('opacity', '0.35');
-          cx = p.width / 2;
-          cy = p.height / 3;
-          pendulums.push(new Pendulum(p.PI / 2));
-          pendulums.push(new Pendulum(p.PI / 2 + 0.08));
-          pendulums.push(new Pendulum(p.PI / 2 - 0.08));
-        };
+    if query_page != current_page:
+        current_page = query_page
 
-        p.draw = function() {
-          p.noStroke();
-          p.fill(11, 11, 11, 12);
-          p.rect(0, 0, p.width, p.height);
-          p.translate(cx, cy);
-          for (let pend of pendulums) {
-            pend.update(p.height);
-            pend.show();
-          }
-        };
+    if current_page not in PAGE_BY_KEY:
+        current_page = HOME_PAGE_KEY
 
-        p.windowResized = function() {
-          p.resizeCanvas(p.windowWidth, p.windowHeight);
-          cx = p.width / 2;
-          cy = p.height / 3;
-        };
-      };
+    set_current_page(current_page)
+    return current_page
 
-      new p5(sketch);
-    })();
-    </script>
-    """, unsafe_allow_html=True)
 
-elif page == "🌀 Lorenz Attractor":
-    from visualizations import lorenz
-    importlib.reload(lorenz)
-    lorenz.render()
+def render_home() -> None:
+    st.title("Math Visualizations")
+    st.markdown(
+        """
+        Explore interactive mathematical and physics-based chaotic visualizations.
+        Each sketch runs in the browser, so you can tweak parameters and see the system respond immediately.
+        """
+    )
+    st.caption("Tip: the current page is mirrored in the URL as `?page=...`, so individual sketches are easy to bookmark.")
 
-elif page == "🪐 Aizawa Attractor":
-    from visualizations import aizawa
-    importlib.reload(aizawa)
-    aizawa.render()
+    columns = st.columns(3, gap="large")
+    for index, page in enumerate(VISUALIZATION_PAGES):
+        with columns[index % 3]:
+            with st.container(border=True):
+                st.markdown(
+                    f"""
+                    <div class="home-card">
+                        <div class="home-card-icon">{page.icon}</div>
+                        <h3>{page.title}</h3>
+                        <p>{page.description}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if st.button(f"Open {page.title}", key=f"open_{page.key}", use_container_width=True):
+                    set_current_page(page.key)
+                    st.rerun()
 
-elif page == "🦠 Reaction-Diffusion":
-    from visualizations import reaction_diffusion
-    importlib.reload(reaction_diffusion)
-    reaction_diffusion.render()
 
-elif page == "🪀 Double Pendulum":
-    from visualizations import double_pendulum
-    importlib.reload(double_pendulum)
-    double_pendulum.render()
+def render_visualization(page_key: str) -> None:
+    page = PAGE_BY_KEY[page_key]
+    if page.module_name is None:
+        render_home()
+        return
 
-elif page == "🕊️ Flocking Boids":
-    from visualizations import boids
-    importlib.reload(boids)
-    boids.render()
+    module = importlib.import_module(page.module_name)
+    render = getattr(module, "render", None)
+    if render is None:
+        st.error(f"The page module `{page.module_name}` does not expose a `render()` function yet.")
+        return
+    render()
 
-elif page == "🐜 Langton's Ant":
-    from visualizations import langtons_ant
-    importlib.reload(langtons_ant)
-    langtons_ant.render()
 
-elif page == "🎼 Fourier Epicycles":
-    from visualizations import fourier_epicycles
-    importlib.reload(fourier_epicycles)
-    fourier_epicycles.render()
+apply_styles()
 
-elif page == "🌳 Fractal Trees":
-    from visualizations import fractal_trees
-    importlib.reload(fractal_trees)
-    fractal_trees.render()
+current_page = get_current_page()
+selected_page = st.sidebar.radio(
+    "Go to",
+    options=[page.key for page in PAGE_ORDER],
+    index=[page.key for page in PAGE_ORDER].index(current_page),
+    format_func=lambda page_key: PAGE_BY_KEY[page_key].nav_label,
+)
+st.sidebar.caption("Client-side p5.js sketches with Streamlit controls.")
 
-elif page == "🌪️ Clifford Attractor":
-    from visualizations import clifford_attractor
-    importlib.reload(clifford_attractor)
-    clifford_attractor.render()
+if selected_page != current_page:
+    set_current_page(selected_page)
+    current_page = selected_page
+
+render_visualization(current_page)

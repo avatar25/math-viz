@@ -1,5 +1,6 @@
 import streamlit as st
-import streamlit.components.v1 as components
+
+from visualizations.shared import render_p5_iframe
 
 def render():
     st.title("Fractal Trees (L-Systems)")
@@ -17,92 +18,61 @@ def render():
     angle_deg = st.sidebar.slider("Branch Angle", min_value=10, max_value=90, value=25, step=1)
     wind = st.sidebar.slider("Wind Intensity", min_value=0.0, max_value=3.0, value=1.0, step=0.1)
 
-    p5_html = f"""
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-        <style>
-          body {{
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }}
-          canvas {{
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,255,100,0.05); /* Biological organic glow */
-            width: 800px !important;
-            height: 600px !important;
-            border: 1px solid rgba(255,255,255,0.05);
-          }}
-        </style>
-      </head>
-      <body>
-        <script>
-          const maxDepth = {depth};
-          const baseAngle = {angle_deg} * (Math.PI / 180);
-          const windIntensity = {wind};
-          
-          let time = 0;
+    script_body = f"""
+    const maxDepth = {depth};
+    const baseAngle = {angle_deg} * (Math.PI / 180);
+    const windIntensity = {wind};
 
-          function setup() {{
-            createCanvas(800, 600);
-          }}
+    let time = 0;
 
-          function draw() {{
-            background(11, 11, 11);
-            
-            // Calculate wind oscillation using a sine wave
-            time += 0.02;
-            let currentWind = sin(time * windIntensity * 2) * (0.08 * windIntensity);
-            
-            // Move origin to the bottom center (planting the root)
-            translate(width / 2, height);
-            
-            // Recursive branching mechanics
-            branch(160, 0, currentWind);
-          }}
+    function setup() {{
+      createCanvas(800, 600);
+    }}
 
-          function branch(len, depth, windOffset) {{
-            // Smoothly decrease stroke weight as branches get smaller (like a real tree)
-            strokeWeight(map(len, 5, 160, 0.5, 6));
-            
-            // Dynamic Japanese Bonsai aesthetic coloring
-            if (depth >= maxDepth - 2 && maxDepth > 4) {{
-                // The newest tiny outer branches act like glowing neon leaves
-                stroke(150, 255, 180, 220); 
-            }} else {{
-                // Thick primary trunk branches are metallic white/silver
-                stroke(220, 220, 230, map(depth, 0, 10, 255, 150));
-            }}
+    function draw() {{
+      background(11, 11, 11);
+      time += 0.02;
+      let currentWind = sin(time * windIntensity * 2) * (0.08 * windIntensity);
+      translate(width / 2, height);
+      branch(160, 0, currentWind);
+    }}
 
-            line(0, 0, 0, -len);
-            translate(0, -len);
+    function branch(len, depth, windOffset) {{
+      strokeWeight(map(len, 5, 160, 0.5, 6));
 
-            if (depth < maxDepth - 1) {{
-              // Physics simulation: Wind affects thinner higher branches much more heavily than the thick trunk
-              let windPhysics = windOffset * (depth * 0.3); 
-              
-              // Grow right offset branch
-              push();
-              rotate(baseAngle + windPhysics);
-              branch(len * 0.67, depth + 1, windOffset);
-              pop();
+      if (depth >= maxDepth - 2 && maxDepth > 4) {{
+        stroke(150, 255, 180, 220);
+      }} else {{
+        stroke(220, 220, 230, map(depth, 0, 10, 255, 150));
+      }}
 
-              // Grow left offset branch
-              push();
-              rotate(-baseAngle + windPhysics);
-              branch(len * 0.67, depth + 1, windOffset);
-              pop();
-            }}
-          }}
-        </script>
-      </body>
-    </html>
+      line(0, 0, 0, -len);
+      translate(0, -len);
+
+      if (depth < maxDepth - 1) {{
+        let windPhysics = windOffset * (depth * 0.3);
+
+        push();
+        rotate(baseAngle + windPhysics);
+        branch(len * 0.67, depth + 1, windOffset);
+        pop();
+
+        push();
+        rotate(-baseAngle + windPhysics);
+        branch(len * 0.67, depth + 1, windOffset);
+        pop();
+      }}
+    }}
     """
-    
-    components.html(p5_html, height=650)
+
+    render_p5_iframe(
+        script_body,
+        height=650,
+        canvas_css="""
+        width: min(100%, 800px) !important;
+        aspect-ratio: 4 / 3;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 255, 100, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        """,
+    )

@@ -1,7 +1,16 @@
-/* Fira Code Font Injection */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+:root {
+    --bg: #0b0b0b;
+    --bg-elevated: rgba(18, 18, 20, 0.82);
+    --bg-sidebar: rgba(11, 11, 11, 0.72);
+    --text: #f3f6fb;
+    --muted: #a7b1c2;
+    --accent: #00d9ff;
+    --accent-soft: rgba(0, 217, 255, 0.14);
+    --border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    --font-mono: "Fira Code", "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace;
+}
 
-*,
 html,
 body,
 [class*="css"],
@@ -20,127 +29,82 @@ button,
 a,
 li,
 td,
-th,
-[data-testid] {
-    font-family: 'Fira Code', monospace !important;
+th {
+    font-family: var(--font-mono) !important;
 }
 
-/* Deep Charcoal / Obsidian Background with Blueprint Grid */
 .stApp {
-    background-color: #0b0b0b !important;
+    background-color: var(--bg) !important;
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) !important;
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px) !important;
     background-size: 30px 30px !important;
-    color: #e0e0e0 !important;
+    color: var(--text) !important;
 }
 
-/* Glassmorphism Sidebar */
-[data-testid="stSidebar"] {
-    background-color: rgba(11, 11, 11, 0.4) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Custom Navigation: Hide default radio circles */
-div[role="radiogroup"]>label>div:first-child {
-    display: none !important;
-}
-
-/* Style Radio Labels as Icons/Cards */
-div[role="radiogroup"]>label {
+[data-testid="stHeader"] {
     background: transparent !important;
-    padding: 12px 16px !important;
-    margin-bottom: 8px !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    position: relative !important;
-    border-left: 2px solid transparent !important;
 }
 
-div[role="radiogroup"]>label p {
-    color: #f0f0f0 !important;
-    font-size: 1.05rem !important;
+[data-testid="stSidebar"] {
+    background: var(--bg-sidebar) !important;
+    backdrop-filter: blur(14px) !important;
+    border-right: 1px solid var(--border) !important;
 }
 
-/* Hover effect on nav items */
-div[role="radiogroup"]>label:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Active State: The "neon sliding line" effect */
-div[role="radiogroup"]>label[data-checked="true"] {
-    background: rgba(0, 255, 255, 0.05) !important;
-    border-left: 3px solid #00FFFF !important;
-    color: #00FFFF !important;
-    box-shadow: inset 20px 0 20px -20px rgba(0, 255, 255, 0.3);
-}
-
-div[role="radiogroup"]>label[data-checked="true"] p {
-    color: #00FFFF !important;
-    font-weight: 600 !important;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-}
-
-/* Home Page Cards Overlay */
-.cards-container {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin-top: 40px;
-    z-index: 10;
-    position: relative;
-}
-
-.viz-card {
-    background: rgba(20, 20, 22, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    padding: 24px;
-    width: 300px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-}
-
-.viz-card>h3 {
-    margin-top: 0;
-    color: #fff;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-}
-
-.viz-card>p {
-    color: #aaa;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    flex-grow: 1;
-}
-
-.viz-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(0, 255, 255, 0.4);
-    box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15);
-}
-
-.viz-card .icon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-}
-
-/* Headings */
 h1,
 h2,
 h3 {
-    color: #ffffff !important;
+    color: var(--text) !important;
+    letter-spacing: -0.02em;
 }
 
-/* Sliders Overhaul */
+p,
+li,
+.stCaption {
+    color: var(--muted) !important;
+}
+
+a {
+    color: var(--accent) !important;
+}
+
+div[role="radiogroup"] > label > div:first-child {
+    display: none !important;
+}
+
+div[role="radiogroup"] > label {
+    background: transparent !important;
+    padding: 12px 16px !important;
+    margin-bottom: 8px !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+    border: 1px solid transparent !important;
+}
+
+div[role="radiogroup"] > label p {
+    color: var(--text) !important;
+    font-size: 1rem !important;
+}
+
+div[role="radiogroup"] > label:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--border) !important;
+    transform: translateX(2px);
+}
+
+div[role="radiogroup"] > label[data-checked="true"] {
+    background: var(--accent-soft) !important;
+    border-color: rgba(0, 217, 255, 0.35) !important;
+    box-shadow: inset 0 0 0 1px rgba(0, 217, 255, 0.15);
+}
+
+div[role="radiogroup"] > label[data-checked="true"] p {
+    color: var(--accent) !important;
+    font-weight: 600 !important;
+}
+
 .stSlider div[data-baseweb="slider"] {
     background: transparent !important;
 }
@@ -149,80 +113,58 @@ h3 {
     display: none !important;
 }
 
-/* Make top header blend with dark theme */
-[data-testid="stHeader"] {
-    background: transparent !important;
+section[data-testid="stMain"] div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Force all sidebar labels and paragraphs to pop */
-[data-testid="stSidebar"] label p,
-[data-testid="stSidebar"] .stMarkdown p {
-    color: #ffffff !important;
-    font-weight: 500 !important;
-    opacity: 0.95 !important;
+section[data-testid="stMain"] div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 217, 255, 0.28) !important;
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.42);
 }
 
-/* --- Custom Sidebar Toggle Button --- */
-
-/* Base button styling for both Expanded and Collapsed states */
-[data-testid="stSidebarCollapseButton"] button,
-button[data-testid="stExpandSidebarButton"] {
-    width: 170px !important;
-    height: 40px !important;
-    background-color: rgba(26, 26, 26, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 8px !important;
-    color: white !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 1000001 !important;
-    backdrop-filter: blur(8px) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+.home-card {
+    min-height: 210px;
 }
 
-/* Hover effects */
-[data-testid="stSidebarCollapseButton"] button:hover,
-button[data-testid="stExpandSidebarButton"]:hover {
-    background-color: rgba(45, 45, 45, 1) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5) !important;
+.home-card-icon {
+    font-size: 2.4rem;
+    margin-bottom: 0.8rem;
 }
 
-/* Position anchoring for the close button container in open sidebar */
-[data-testid="stSidebarCollapseButton"] {
-    position: fixed !important;
-    top: 15px !important;
-    left: 15px !important;
-    right: auto !important;
-    z-index: 1000000 !important;
-    margin: 0 !important;
+.home-card h3 {
+    margin: 0 0 0.6rem 0;
+    font-size: 1.15rem;
 }
 
-/* Position anchoring for the expand button in collapsed state */
-button[data-testid="stExpandSidebarButton"] {
-    position: fixed !important;
-    top: 15px !important;
-    left: 15px !important;
-    margin: 0 !important;
+.home-card p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--muted) !important;
 }
 
-/* Hide original Streamlit chevron icons */
-[data-testid="stSidebarCollapseButton"] button span:first-child,
-button[data-testid="stExpandSidebarButton"] span:first-child {
-    display: none !important;
+.stButton > button {
+    width: 100%;
+    min-height: 2.7rem;
+    border-radius: 10px !important;
+    border: 1px solid rgba(0, 217, 255, 0.35) !important;
+    background: rgba(0, 217, 255, 0.12) !important;
+    color: var(--text) !important;
+    font-weight: 600 !important;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease !important;
 }
 
-/* Injected textual content */
-[data-testid="stSidebarCollapseButton"] button::after,
-button[data-testid="stExpandSidebarButton"]::after {
-    content: "SIDEBAR" !important;
-    font-family: 'Inter', -apple-system, system-ui, sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1.2px !important;
-    color: #ffffff !important;
+.stButton > button:hover {
+    background: rgba(0, 217, 255, 0.2) !important;
+    border-color: rgba(0, 217, 255, 0.65) !important;
+    transform: translateY(-1px);
+}
+
+.stButton > button:focus-visible {
+    outline: 2px solid var(--accent) !important;
+    outline-offset: 2px !important;
 }
