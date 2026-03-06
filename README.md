@@ -12,6 +12,7 @@ Interactive mathematical and chaos-theory visualizations built with Streamlit an
 - Langton's ant
 - Fourier epicycles
 - Fractal trees
+- Sierpinski triangle
 - Clifford attractor
 
 ## Running locally

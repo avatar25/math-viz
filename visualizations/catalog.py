@@ -89,6 +89,14 @@ PAGE_ORDER = (
         module_name="visualizations.fractal_trees",
     ),
     VisualizationPage(
+        key="sierpinski-triangle",
+        nav_label="🔺 Sierpinski Triangle",
+        icon="🔺",
+        title="Sierpinski Triangle",
+        description="The chaos game repeatedly jumps toward triangle vertices to reveal one of the simplest fractals.",
+        module_name="visualizations.sierpinski_triangle",
+    ),
+    VisualizationPage(
         key="clifford-attractor",
         nav_label="🌪️ Clifford Attractor",
         icon="🌪️",
